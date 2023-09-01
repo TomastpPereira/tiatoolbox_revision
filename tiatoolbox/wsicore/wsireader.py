@@ -1581,8 +1581,26 @@ class WSIReader:
                 + tile_format
             )
 
-            utils.imwrite(image_path=output_dir / img_save_name, img=im)
-
+            # Revision Made to Not Save White-space Tiles
+            whitePatch = False
+            if count==0:
+                whiteness = np.mean(im[:,:,:], axis=(0,1))
+                print("white", whiteness)
+                count=1
+    
+            im_aggregate = np.mean(im[:,:,:], axis=(0,1))
+            print(im_aggregate, img_save_name)
+            if im_aggregate[0]<whiteness[0]-1 and im_aggregate[1]<whiteness[1]-1 and im_aggregate[2]<whiteness[2]-1:
+                pass
+            else:
+                whitePatch = True
+            
+            if whitePatch == False:
+                imwrite(image_path=output_dir / img_save_name, img=im)
+            else:
+                pass
+            #---------------------------------------------------------------
+                
             data.append(
                 [
                     iter_tot,
